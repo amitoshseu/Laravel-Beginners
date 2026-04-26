@@ -1,33 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Personal Task Board')</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 text-gray-800">
-    <header class="bg-gray-900 text-white">
-        <div class="max-w-4xl mx-auto p-4">
-            <h1 class="text-xl font-bold">Personal Task Board</h1>
-            <nav class="mt-3 flex flex-wrap gap-2 text-sm">
-                <a href="{{ route('home') }}" class="px-3 py-1 rounded {{ request()->routeIs('home') ? 'bg-white text-gray-900' : 'bg-gray-700' }}">Home</a>
-                <a href="{{ route('about') }}" class="px-3 py-1 rounded {{ request()->routeIs('about') ? 'bg-white text-gray-900' : 'bg-gray-700' }}">About</a>
-                <a href="{{ route('tasks.create') }}" class="px-3 py-1 rounded {{ request()->routeIs('tasks.create') ? 'bg-yellow-300 text-gray-900' : 'bg-gray-700' }}">Create Task</a>
-                <a href="{{ route('tasks.index') }}" class="px-3 py-1 rounded {{ request()->routeIs('tasks.index') ? 'bg-yellow-300 text-gray-900' : 'bg-gray-700' }}">Task List</a>
-                <a href="{{ route('contact') }}" class="px-3 py-1 rounded {{ request()->routeIs('contact') ? 'bg-white text-gray-900' : 'bg-gray-700' }}">Contact</a>
-            </nav>
-        </div>
-    </header>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <main class="max-w-4xl mx-auto p-4">
-        @yield('content')
-    </main>
+        <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <footer class="mt-6 border-t bg-white">
-        <div class="max-w-4xl mx-auto p-4 text-sm text-center text-gray-600">
-            Beginner Personal Task Board - Built with Laravel Blade
-        </div>
-    </footer>
-</body>
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+        <!-- Scripts -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    </head>
+    <body class="bg-gray-100 text-gray-900 font-sans antialiased">
+        <header class="bg-white shadow-md py-4">
+            <div class="container mx-auto flex flex-wrap items-center justify-between gap-3 px-6">
+                <a href="{{ route('home') }}" class="text-xl font-bold">Brand</a>
+
+                <nav>
+                    <ul class="flex flex-wrap items-center gap-4">
+                        <li><a href="{{ route('home') }}" class="hover:text-blue-500">Home</a></li>
+                        <li><a href="{{ route('about') }}" class="hover:text-blue-500">About Us</a></li>
+                        <li><a href="{{ route('contact') }}" class="hover:text-blue-500">Contact</a></li>
+                        <li><a href="{{ route('tasks.create') }}" class="hover:text-blue-500">Create Task</a></li>
+                        <li><a href="{{ route('tasks.index') }}" class="hover:text-blue-500">Task List</a></li>
+                    </ul>
+                </nav>
+
+                <div class="flex items-center gap-3 text-sm">
+                    @auth
+                        <span class="text-gray-600">{{ Auth::user()->name }}</span>
+                        <a href="{{ route('profile.edit') }}" class="hover:text-blue-500">Profile</a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="bg-gray-900 text-white px-3 py-1 rounded">Log Out</button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="hover:text-blue-500">Log in</a>
+                        <a href="{{ route('register') }}" class="hover:text-blue-500">Register</a>
+                    @endauth
+                </div>
+            </div>
+        </header>
+
+        @isset($header)
+            <section class="bg-white border-t">
+                <div class="container mx-auto px-6 py-4">
+                    {{ $header }}
+                </div>
+            </section>
+        @endisset
+
+        <main class="container mx-auto mt-8 px-6">
+            @isset($slot)
+                {{ $slot }}
+            @else
+                @yield('content')
+            @endisset
+        </main>
+
+        <footer class="mt-10 py-6 bg-white text-center shadow-md">
+            <p class="text-gray-600">&copy; 2026 Brand. All rights reserved.</p>
+        </footer>
+    </body>
 </html>
