@@ -1,0 +1,7 @@
+1. laravel new todo-app
+2. Which starter kit would you like to install? [None]: none 
+3. Which testing framework do you prefer? [Pest]: 1
+4. Do you want to install Laravel Boost to improve AI assisted coding? (yes/no) [yes]:no
+5. Which database will your application use? [SQLite]: mysql
+6. Default database updated. Would you like to run the default database migrations? (yes/no) [yes]: no
+7. Would you like to run npm install --ignore-scripts and npm run build? (yes/no) [yes]:no
